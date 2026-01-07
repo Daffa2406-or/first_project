@@ -1,0 +1,129 @@
+{% extends "layout_user.html" %}
+
+{% block content %}
+<div class="container mt-5 pt-5" style="min-height: 80vh;">
+    
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">UPGRADE <span class="text-danger">PAKET</span></h2>
+        <p class="text-muted">Tingkatkan pengalaman latihan Anda dengan paket yang lebih lengkap</p>
+    </div>
+
+    <div class="card bg-dark border-secondary shadow-lg mb-5">
+        <div class="card-header border-secondary bg-transparent p-4">
+            <h4 class="mb-0">Pilih Paket Baru</h4>
+        </div>
+        <div class="card-body p-4">
+            <div class="row g-4 justify-content-center">
+                
+                {% for pkg in packages %}
+                <div class="col-md-4 cursor-pointer" onclick="selectPackage('{{ pkg.name }}', '{{ pkg.price }}', '{{ pkg.duration }}')">
+                    
+                    <div class="card h-100 position-relative package-option-card {{ 'border-danger bg-secondary bg-opacity-10' if selected_pkg and selected_pkg.name == pkg.name else 'border-secondary bg-transparent' }}" 
+                         id="card-{{ pkg.name }}"
+                         style="transition: all 0.3s; cursor: pointer;">
+                        
+                        <div class="card-body text-center p-4">
+                            <div class="mb-3">
+                                <i class="bi {{ 'bi-check-circle-fill text-danger' if selected_pkg and selected_pkg.name == pkg.name else 'bi-circle text-secondary' }} fs-3 select-icon" id="icon-{{ pkg.name }}"></i>
+                            </div>
+
+                            <h4 class="fw-bold text-white">{{ pkg.name }}</h4>
+                            
+                            <h2 class="text-danger my-3">Rp {{ "{:,.0f}".format(pkg.price).replace(',', '.') }}</h2>
+                            
+                            <small class="text-white-50">Durasi: {{ pkg.duration }} Hari</small>
+
+                            <hr class="border-secondary my-4">
+
+                            <ul class="list-unstyled text-start small mx-auto" style="max-width: 200px;">
+                                {% if pkg.description %}
+                                    {% for feature in pkg.description.splitlines() %}
+                                    <li class="mb-2 text-light">
+                                        <i class="bi bi-check2 text-success me-2"></i> {{ feature }}
+                                    </li>
+                                    {% endfor %}
+                                {% else %}
+                                    <li class="text-white-50">Paket reguler</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="card bg-dark border-secondary shadow-lg mb-5" id="summary-section">
+        <div class="card-body p-4">
+            <h5 class="mb-4 border-bottom border-secondary pb-3">Ringkasan Upgrade</h5>
+            
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <p class="mb-1 text-muted">Paket yang dipilih:</p>
+                    <h3 class="fw-bold text-white mb-3" id="summary-name">
+                        {{ selected_pkg.name if selected_pkg else 'Pilih Paket' }}
+                    </h3>
+                    
+                    <p class="mb-1 text-muted">Total Pembayaran:</p>
+                    <h2 class="fw-bold text-danger mb-0" id="summary-price">
+                        Rp {{ "{:,.0f}".format(selected_pkg.price).replace(',', '.') if selected_pkg else '0' }}
+                    </h2>
+                    <small class="text-muted" id="summary-duration">
+                        Durasi Aktif: {{ selected_pkg.duration if selected_pkg else '30' }} Hari
+                    </small>
+                </div>
+                
+                <div class="col-md-4 text-end mt-4 mt-md-0">
+                    <a id="btn-lanjut" 
+                       href="/payment?package={{ selected_pkg.name if selected_pkg else '' }}" 
+                       class="btn btn-danger btn-lg w-100 py-3 rounded-pill shadow">
+                        <i class="bi bi-credit-card-2-back me-2"></i> LANJUT PEMBAYARAN
+                    </a>
+                    
+                    <a href="/" class="btn btn-outline-secondary w-100 mt-3 rounded-pill">BATAL</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function selectPackage(name, price, duration) {
+        // 1. Reset Tampilan Kartu
+        document.querySelectorAll('.package-option-card').forEach(el => {
+            el.classList.remove('border-danger', 'bg-secondary', 'bg-opacity-10');
+            el.classList.add('border-secondary', 'bg-transparent');
+        });
+        document.querySelectorAll('.select-icon').forEach(el => {
+            el.classList.remove('bi-check-circle-fill', 'text-danger');
+            el.classList.add('bi-circle', 'text-secondary');
+        });
+
+        // 2. Highlight Kartu yang Dipilih
+        const activeCard = document.getElementById('card-' + name);
+        const activeIcon = document.getElementById('icon-' + name);
+        
+        if(activeCard) {
+            activeCard.classList.remove('border-secondary', 'bg-transparent');
+            activeCard.classList.add('border-danger', 'bg-secondary', 'bg-opacity-10');
+        }
+        if(activeIcon) {
+            activeIcon.classList.remove('bi-circle', 'text-secondary');
+            activeIcon.classList.add('bi-check-circle-fill', 'text-danger');
+        }
+
+        // 3. Update Text Ringkasan
+        document.getElementById('summary-name').innerText = name;
+        
+        let formattedPrice = new Intl.NumberFormat('id-ID').format(price);
+        document.getElementById('summary-price').innerText = 'Rp ' + formattedPrice;
+        document.getElementById('summary-duration').innerText = 'Durasi Aktif: ' + duration + ' Hari';
+
+        // 4. Update Link Tombol Lanjut (PENTING!)
+        // Ini memastikan saat tombol diklik, dia membawa nama paket yang benar ke halaman payment
+        document.getElementById('btn-lanjut').href = "/payment?package=" + name;
+    }
+</script>
+{% endblock %}

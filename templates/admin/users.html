@@ -1,0 +1,68 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>Manajemen User</h3>
+    <a href="/admin/users/create" class="btn btn-success">
+        <i class="bi bi-person-plus-fill me-2"></i>Tambah User
+    </a>
+</div>
+
+<div class="card card-stat p-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nama</th>
+                    <th>Email</th>
+                    <th>Paket</th>
+                    <th>Level</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                <tr>
+                    <td>#{{ u.id }}</td>
+                    <td>
+                        <div class="fw-bold">{{ u.name }}</div>
+                        <small class="text-muted">{{ u.phone }}</small>
+                    </td>
+                    <td>{{ u.email }}</td>
+                    <td>
+                        {% if u.package == 'Pro' %}
+                            <span class="badge bg-warning text-dark">Pro</span>
+                        {% elif u.package == 'Menengah' %}
+                            <span class="badge bg-info text-dark">Menengah</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Pemula</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ u.level }}</td>
+                    <td>
+                        {% if u.status == 'Active' %}
+                            <span class="badge bg-success">Active</span>
+                        {% else %}
+                            <span class="badge bg-danger">Suspended</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="/admin/users/edit/{{ u.id }}" class="btn btn-warning btn-sm" title="Edit">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <a href="/admin/users/delete/{{ u.id }}" class="btn btn-danger btn-sm" 
+                               onclick="return confirm('Yakin ingin menghapus user ini?')" title="Hapus">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

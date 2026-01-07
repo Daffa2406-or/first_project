@@ -1,0 +1,53 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<div class="container" style="max-width: 600px;">
+    <div class="card card-stat p-4">
+        <h3 class="mb-4">{{ action }} User</h3>
+
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">Nama Lengkap</label>
+                <input name="name" class="form-control" value="{{ user.name if user else '' }}" required>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input name="email" class="form-control" value="{{ user.email if user else '' }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">No HP</label>
+                <input name="phone" class="form-control" value="{{ user.phone if user else '' }}">
+            </div>
+
+            {% if action == "Tambah" %}
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input name="password" type="password" class="form-control" required>
+            </div>
+            {% endif %}
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Paket</label>
+                    <select name="package" class="form-control">
+                        <option value="Pemula" {{ 'selected' if user and user.package == 'Pemula' }}>Pemula</option>
+                        <option value="Menengah" {{ 'selected' if user and user.package == 'Menengah' }}>Menengah</option>
+                        <option value="Pro" {{ 'selected' if user and user.package == 'Pro' }}>Pro</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Level</label>
+                    <input name="level" class="form-control" value="{{ user.level if user else 'Pemula' }}">
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-3">
+                <a href="/admin/users" class="btn btn-secondary">Kembali</a>
+                <button class="btn btn-danger px-4">{{ action }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

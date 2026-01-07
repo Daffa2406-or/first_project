@@ -1,0 +1,38 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>Paket Layanan</h3>
+    </div>
+
+<div class="row g-4">
+    {% for pkg in packages %}
+    <div class="col-md-4">
+        <div class="card card-stat h-100 position-relative">
+            <div class="card-body text-center p-4">
+                
+                <h5 class="card-title fw-bold mb-3">{{ pkg.name }}</h5>
+                
+                <h2 class="text-danger mb-1">Rp {{ "{:,.0f}".format(pkg.price) }}</h2>
+                <small class="text-muted d-block mb-3">Durasi: {{ pkg.duration }} Hari</small>
+                
+                <p class="text-muted mb-4 small border-top pt-3">
+                    {{ pkg.description }}
+                </p>
+                
+                <div class="d-grid gap-2">
+                    <a href="/admin/packages/edit/{{ pkg.id }}" class="btn btn-warning text-dark">
+                        <i class="bi bi-pencil-square me-2"></i>Edit Harga & Info
+                    </a>
+                    </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12 text-center text-muted py-5">
+        <h4>Tidak ada data paket.</h4>
+        <p>Silakan cek database Anda.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

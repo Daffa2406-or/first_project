@@ -1,0 +1,250 @@
+{% extends "layout_user.html" %}
+
+{% block content %}
+
+<section class="hero-section" id="home" data-aos="fade-up">
+    <div class="container">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-8 mx-auto text-center">
+                <div class="hero-badge mb-4">
+                    <span class="badge bg-danger px-4 py-2 fs-6">#1 BOXING COMMUNITY</span>
+                </div>
+                
+                <h1 class="hero-title display-1 fw-bold mb-4">
+                    <span class="text-white">UNLEASH YOUR</span>
+                    <span class="text-danger d-block">INNER CHAMPION</span>
+                </h1>
+                
+                <p class="hero-subtitle fs-4 mb-5">
+                    Transformasi fisik & mental melalui seni tinju profesional.
+                    Bergabunglah dengan <span class="text-warning"></span> petinju kami.
+                </p>
+
+                {% if user %}
+                    <div class="user-profile-container">
+                        <div class="user-welcome-box">
+                            <h3 class="welcome-message">
+                                Selamat Datang, <span class="username-highlight">{{ user.name }}!</span>
+                            </h3>
+                            
+                            <div class="user-stats-grid">
+                                {% if not last_payment or (last_payment.status != 'Pending' and last_payment.status != 'Rejected') %}
+                                <div class="stat-card level-card">
+                                    <div class="stat-icon"><i class="bi bi-trophy-fill"></i></div>
+                                    <div class="stat-content">
+                                        <div class="stat-value">{{ user.level if user.level else 'Pro' }}</div>
+                                        <div class="stat-label">LEVEL ANDA</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if last_payment and last_payment.status == 'Pending' %}
+                                    <div class="stat-card" style="grid-column: 1 / -1; border: 1px solid #ffc107; background: rgba(255, 193, 7, 0.1); display: flex; align-items: center; padding: 20px; gap: 20px;">
+                                        <div style="min-width: 60px; height: 60px; background: #ffc107; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: black; font-size: 1.8rem;"><i class="bi bi-hourglass-split"></i></div>
+                                        <div class="text-start">
+                                            <h4 style="margin: 0; font-size: 1.2rem; color: #ffc107; font-weight: bold; text-transform: uppercase;">Menunggu Konfirmasi</h4>
+                                            <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #ccc; line-height: 1.4;">Permintaan upgrade ke paket <strong>{{ last_payment.package_name }}</strong> sedang diperiksa Admin.</p>
+                                        </div>
+                                    </div>
+                                {% elif last_payment and last_payment.status == 'Rejected' %}
+                                    <div class="stat-card" style="grid-column: 1 / -1; border: 1px solid #dc3545; background: rgba(220, 53, 69, 0.1); display: flex; align-items: center; padding: 20px; gap: 20px;">
+                                        <div style="min-width: 60px; height: 60px; background: #dc3545; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.8rem;"><i class="bi bi-x-lg"></i></div>
+                                        <div class="text-start">
+                                            <h4 style="margin: 0; font-size: 1.2rem; color: #dc3545; font-weight: bold; text-transform: uppercase;">Pembayaran Ditolak</h4>
+                                            <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #ccc; line-height: 1.4;">Bukti transfer tidak valid atau buram. Silakan lakukan pembayaran ulang.</p>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="stat-card package-card">
+                                        <div class="stat-icon"><i class="bi bi-award-fill"></i></div>
+                                        <div class="stat-content">
+                                            <div class="stat-value">{{ user.package }}</div>
+                                            <div class="stat-label">PAKET AKTIF</div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="profile-actions mt-4 d-flex gap-2">
+                                <a href="#plans" class="btn btn-danger btn-upgrade flex-grow-1"><i class="bi bi-cart-check-fill me-2"></i> PILIH PAKET</a>
+                                <button class="btn btn-outline-light btn-profile flex-grow-1" data-bs-toggle="modal" data-bs-target="#profileModal"><i class="bi bi-person-circle me-2"></i> LIHAT PROFIL</button>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="hero-buttons" style="position: relative; z-index: 9999;">
+                        <a href="#plans" id="btn-join-now" class="btn btn-danger btn-lg rounded-pill px-5">
+                            <i class="bi bi-person-plus me-2"></i> Daftar Sekarang
+                        </a>
+                    </div>
+                    
+                    <div class="row mt-5 justify-content-center">
+                        <div class="col-md-3 col-6"><div class="counter-box"><div class="counter" data-count="5000">0</div><div class="counter-label">Member Aktif</div></div></div>
+                        <div class="col-md-3 col-6"><div class="counter-box"><div class="counter" data-count="50">0</div><div class="counter-label">Pelatih Profesional</div></div></div>
+                        <div class="col-md-3 col-6"><div class="counter-box"><div class="counter" data-count="15">0</div><div class="counter-label">Cabang</div></div></div>
+                        <div class="col-md-3 col-6"><div class="counter-box"><div class="counter" data-count="100">0</div><div class="counter-label">Kelas/Minggu</div></div></div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="scroll-indicator">
+        <a href="#about" class="scroll-down"><i class="bi bi-chevron-down"></i></a>
+    </div>
+</section>
+
+<section class="features-section py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4" data-aos="fade-up">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="bi bi-shield-check"></i></div>
+                    <h4 class="feature-title">Safety First</h4>
+                    <p class="feature-desc">Peralatan premium & pelatih bersertifikat untuk keamanan maksimal</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="bi bi-people"></i></div>
+                    <h4 class="feature-title">Komunitas Solid</h4>
+                    <p class="feature-desc">Bergabung dengan komunitas petinju terbesar di Indonesia</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="bi bi-clock-history"></i></div>
+                    <h4 class="feature-title">Fleksibel</h4>
+                    <p class="feature-desc">Jadwal 24/7 dengan kelas pagi, siang, dan malam</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="about" class="about-section content-section" data-aos="fade-up">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <div class="about-image position-relative">
+                    <img src="https://images.unsplash.com/photo-1583473848882-f9a5bc7fd2ee?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Orang sedang melakukan boxing" class="img-fluid rounded shadow-lg">
+                    <div class="experience-badge"><span class="badge-year">10+</span><span class="badge-text">Tahun<br>Pengalaman</span></div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <h2 class="section-title text-start mb-4">TENTANG <span class="text-danger">BOXING FITNES</span></h2>
+                <p class="about-text fs-5 mb-4">Kami bukan sekadar gym biasa. BOXING FITNES adalah komunitas olahraga tinju profesional yang telah melatih lebih dari ratusan petinju.</p>
+                <div class="about-features">
+                    <div class="d-flex mb-3"><i class="bi bi-check-circle-fill text-danger fs-4 me-3"></i><div><h5 class="fw-bold">Pelatih Bersertifikat Nasional</h5><p class="text-white-50">Pelatih dengan sertifikasi NASBox</p></div></div>
+                    <div class="d-flex mb-3"><i class="bi bi-check-circle-fill text-danger fs-4 me-3"></i><div><h5 class="fw-bold">Fasilitas Premium</h5><p class="text-white-50">Ring tinju profesional, heavy bag, speed bag</p></div></div>
+                    <div class="d-flex mb-3"><i class="bi bi-check-circle-fill text-danger fs-4 me-3"></i><div><h5 class="fw-bold">Program Personalisasi</h5><p class="text-white-50">Program latihan disesuaikan dengan tujuan</p></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="plans" class="plans-section content-section" data-aos="fade-up">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title mb-3">PAKET <span class="text-danger">LATIHAN</span></h2>
+            <p class="section-subtitle">Pilih paket yang sesuai dengan kebutuhan dan level Anda</p>
+        </div>
+        <div class="row g-4">
+            {% for pkg in packages %}
+            <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="{{ loop.index * 100 }}">
+                <div class="plan-card {{ 'intermediate popular' if pkg.price > 400000 and pkg.price < 700000 else 'beginner' }}">
+                    {% if pkg.price > 400000 and pkg.price < 700000 %}<div class="plan-badge">POPULAR</div>{% endif %}
+                    <div class="plan-header">
+                        <h3 class="plan-title">{{ pkg.name }}</h3>
+                        <div class="plan-price"><span class="currency">Rp</span><span class="amount">{{ "{:,.0f}".format(pkg.price).replace(',', '.') }}</span></div>
+                        <p class="plan-subtitle">Durasi: {{ pkg.duration }} Hari</p>
+                    </div>
+                    <div class="plan-body">
+                        <ul class="plan-features">
+                            {% if pkg.description %}
+                                {% for feature in pkg.description.splitlines() %}
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i> {{ feature }}</li>
+                                {% endfor %}
+                            {% else %}
+                                <li><i class="bi bi-info-circle text-muted me-2"></i> Tidak ada deskripsi</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="plan-footer">
+                        {% if user %}
+                            <a href="/upgrade?package={{ pkg.name }}" class="btn btn-outline-light w-100 rounded-pill">Pilih {{ pkg.name }}</a>
+                        {% else %}
+                            <button class="btn btn-outline-light w-100 rounded-pill" data-bs-toggle="modal" data-bs-target="#registerModal">Pilih Paket</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-12 text-center text-white"><p>Belum ada paket latihan yang tersedia saat ini.</p></div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="testimonial-section py-5" data-aos="fade-up">
+    <div class="container">
+        <div class="text-center mb-5"><h2 class="section-title">KATA <span class="text-danger">MEREKA</span></h2><p class="section-subtitle">Testimoni dari member kami</p></div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating mb-3"><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i></div>
+                    <p class="testimonial-text">"Sejak bergabung 6 bulan lalu, berat badan saya turun 12kg dan stamina meningkat drastis!"</p>
+                    <div class="testimonial-author"><img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Andi" class="testimonial-avatar"><div class="author-info"><h6 class="fw-bold mb-0">Andi Pratama</h6><small class="text-white-50">Member Pro</small></div></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating mb-3"><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i></div>
+                    <p class="testimonial-text">"Komunitasnya sangat supportive. Dari pemula total, sekarang saya bisa ikut sparring ringan."</p>
+                    <div class="testimonial-author"><img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sari" class="testimonial-avatar"><div class="author-info"><h6 class="fw-bold mb-0">Sari Dewi</h6><small class="text-white-50">Member Menengah</small></div></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating mb-3"><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i></div>
+                    <p class="testimonial-text">"Fasilitas lengkap, pelatihnya sabar. Harga worth it untuk kualitas yang didapat."</p>
+                    <div class="testimonial-author"><img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Budi" class="testimonial-avatar"><div class="author-info"><h6 class="fw-bold mb-0">Budi Santoso</h6><small class="text-white-50">Member Pemula</small></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contact" class="contact-section content-section" data-aos="fade-up">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <h2 class="section-title text-start mb-4">HUBUNGI <span class="text-danger">KAMI</span></h2>
+                <p class="contact-text mb-4">Punya pertanyaan? Tim kami siap membantu Anda 7 hari seminggu.</p>
+                <div class="contact-info">
+                    <div class="d-flex align-items-center mb-4"><div class="contact-icon"><i class="bi bi-telephone-fill"></i></div><div class="ms-3"><h5 class="fw-bold mb-1">Telepon</h5><p class="mb-0">{{ site_config.whatsapp_number if site_config else '+62 882 762 278' }}</p></div></div>
+                    <div class="d-flex align-items-center mb-4"><div class="contact-icon"><i class="bi bi-envelope-fill"></i></div><div class="ms-3"><h5 class="fw-bold mb-1">Email</h5><p class="mb-0">info@boxingfitnes.com</p></div></div>
+                    <div class="d-flex align-items-center mb-4"><div class="contact-icon"><i class="bi bi-geo-alt-fill"></i></div><div class="ms-3"><h5 class="fw-bold mb-1">Alamat</h5><p class="mb-0">Jl. Sleman, Yogyakarta</p></div></div>
+                    <div class="d-flex align-items-center"><div class="contact-icon"><i class="bi bi-clock-fill"></i></div><div class="ms-3"><h5 class="fw-bold mb-1">Jam Operasional</h5><p class="mb-0">Senin - Minggu: 05:00 - 22:00 WIB</p></div></div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="contact-form">
+                    <h4 class="mb-4">Kirim Pesan</h4>
+                    <form action="/contact" method="POST">
+                        <div class="row g-3">
+                            <div class="col-md-6"><input type="text" name="name" class="form-control" placeholder="Nama Lengkap" required></div>
+                            <div class="col-md-6"><input type="email" name="email" class="form-control" placeholder="Email" required></div>
+                            <div class="col-12"><input type="text" name="subject" class="form-control" placeholder="Subjek" required></div>
+                            <div class="col-12"><textarea name="message" class="form-control" rows="5" placeholder="Pesan Anda" required></textarea></div>
+                            <div class="col-12"><button type="submit" class="btn btn-danger w-100 rounded-pill"><i class="bi bi-send me-2"></i> Kirim Pesan</button></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "layout_user.html" %}
+
+{% block content %}
+<div class="container mt-5 pt-5 mb-5" style="min-height: 80vh;">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card bg-dark border-secondary text-white shadow-lg">
+                <div class="card-header bg-danger text-center py-3">
+                    <h4 class="mb-0 fw-bold"><i class="bi bi-credit-card-2-front me-2"></i> PEMBAYARAN</h4>
+                </div>
+                <div class="card-body p-4">
+                    
+                    <div class="text-center mb-4">
+                        <small class="text-white-50 text-uppercase">Paket Dipilih</small>
+                        <h2 class="fw-bold text-white">{{ package }}</h2>
+                        <h3 class="text-danger">Rp {{ "{:,.0f}".format(price).replace(',', '.') }}</h3>
+                    </div>
+
+                    <div class="alert alert-secondary d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <strong class="text-uppercase">{{ site_config.bank_name }}</strong><br>
+                            <span class="fs-4 fw-bold">{{ site_config.account_number }}</span><br>
+                            <small>a.n {{ site_config.account_holder }}</small>
+                        </div>
+                        <i class="bi bi-wallet2 fs-1 text-muted"></i>
+                    </div>
+
+                    <form action="/payment/process" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="package" value="{{ package }}">
+                        <input type="hidden" name="amount" value="{{ price }}">
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Upload Bukti Transfer</label>
+                            <input type="file" name="proof_file" class="form-control bg-black text-white border-secondary" accept="image/*" required>
+                            <div class="form-text text-white-50">Format: JPG, PNG, JPEG. Max 2MB.</div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-send-check me-2"></i> KIRIM BUKTI
+                            </button>
+                            <a href="/upgrade" class="btn btn-outline-secondary">Kembali</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

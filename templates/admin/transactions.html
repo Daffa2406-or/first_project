@@ -1,0 +1,82 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<h2 class="mb-4">Manajemen Transaksi</h2>
+
+<div class="card card-stat p-4">
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Paket</th>
+                    <th>Jumlah</th>
+                    <th>Bukti</th>
+                    <th>Status</th>
+                    <th style="min-width: 150px;">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trx in transactions %}
+                <tr>
+                    <td>#{{ trx.id }}</td>
+                    <td>
+                        <div class="fw-bold">{{ trx.user_name }}</div>
+                        <small class="text-muted">{{ trx.created_at }}</small>
+                    </td>
+                    <td><span class="badge bg-secondary">{{ trx.package_name }}</span></td>
+                    <td>Rp {{ "{:,.0f}".format(trx.amount) }}</td>
+                    <td>
+                        {% if trx.proof_file %}
+                        <a href="{{ url_for('static', filename='uploads/' + trx.proof_file) }}" 
+                           target="_blank" class="btn btn-sm btn-info text-white">
+                           <i class="bi bi-eye"></i> Lihat
+                        </a>
+                        {% else %}
+                        <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if trx.status == 'Pending' %}
+                            <span class="badge bg-warning text-dark">Menunggu</span>
+                        {% elif trx.status == 'Confirmed' %}
+                            <span class="badge bg-success">Diterima</span>
+                        {% else %}
+                            <span class="badge bg-danger">Ditolak</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if trx.status == 'Pending' %}
+                            <div class="btn-group" role="group">
+                                <a href="/admin/transactions/confirm/{{ trx.id }}" 
+                                   class="btn btn-success btn-sm"
+                                   onclick="return confirm('Yakin ingin MENERIMA pembayaran ini? Paket user akan otomatis aktif.')"
+                                   title="Terima">
+                                   <i class="bi bi-check-lg"></i>
+                                </a>
+                                
+                                <a href="/admin/transactions/reject/{{ trx.id }}" 
+                                   class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Yakin ingin MENOLAK pembayaran ini?')"
+                                   title="Tolak">
+                                   <i class="bi bi-x-lg"></i>
+                                </a>
+                            </div>
+                        {% else %}
+                            <span class="text-muted small">Selesai</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" class="text-center py-4 text-muted">
+                        Belum ada transaksi masuk.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

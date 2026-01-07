@@ -1,0 +1,36 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<h2 class="mb-4">Pengaturan Sistem</h2>
+
+<div class="card card-stat p-4">
+    <form action="/admin/settings" method="POST">
+        
+        <h5 class="mb-3 text-warning">Rekening Pembayaran</h5>
+        <div class="mb-3">
+            <label class="form-label">Nama Bank</label>
+            <input type="text" name="bank_name" class="form-control" value="{{ settings.bank_name }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Nomor Rekening</label>
+            <input type="text" name="account_number" class="form-control" value="{{ settings.account_number }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Atas Nama (Pemilik Rekening)</label>
+            <input type="text" name="account_holder" class="form-control" value="{{ settings.account_holder }}" required>
+        </div>
+
+        <hr class="border-secondary my-4">
+
+        <h5 class="mb-3 text-warning">Kontak Perusahaan</h5>
+        <div class="mb-3">
+            <label class="form-label">Nomor WhatsApp Admin (Format: 628xxx)</label>
+            <input type="text" name="whatsapp_number" class="form-control" value="{{ settings.whatsapp_number }}" required>
+        </div>
+
+        <button type="submit" class="btn btn-danger mt-3">
+            <i class="bi bi-save me-2"></i> Simpan Pengaturan
+        </button>
+    </form>
+</div>
+{% endblock %}
